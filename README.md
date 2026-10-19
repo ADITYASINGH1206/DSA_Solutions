@@ -8,7 +8,7 @@ An automated repository of accepted LeetCode solutions in modern C++20 with algo
 
 | Total Solved | Easy | Medium | Hard | Automation Engine |
 | :---: | :---: | :---: | :---: | :---: |
-| **1** | **1** | **0** | **0** | **Gemini 2.5 Flash + LeetCode UGC** |
+| **5** | **2** | **2** | **1** | **Gemini 2.5 Flash + LeetCode UGC** |
 
 ---
 
@@ -16,6 +16,10 @@ An automated repository of accepted LeetCode solutions in modern C++20 with algo
 
 | # | Title | Solution | Difficulty | Topics | LeetCode Post |
 | :-: | :-- | :-: | :-: | :-- | :-: |
+| 0001 | [Two Sum](https://leetcode.com/problems/two-sum/) | [C++](./Solutions/0001-two-sum/solution.cpp) | `Easy` | `c`, `array`, `hash-table` | [Editorial](https://leetcode.com/problems/two-sum/solutions/one-pass-hash-table-on-time-on-space-c20-gpr7/) |
+| 0002 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | [C++](./Solutions/0002-add-two-numbers/solution.cpp) | `Medium` | `c`, `linked-list`, `math` | [Editorial](https://leetcode.com/problems/add-two-numbers/solutions/beats-100-iterative-linked-list-traversa-ojxe/) |
+| 0003 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | [C++](./Solutions/0003-longest-substring-without-repeating-characters/solution.cpp) | `Medium` | `c`, `hash-table`, `string` | [Editorial](https://leetcode.com/problems/longest-substring-without-repeating-characters/solutions/sliding-window-with-hash-map-on-time-omi-gjks/) |
+| 0004 | [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) | [C++](./Solutions/0004-median-of-two-sorted-arrays/solution.cpp) | `Hard` | `c`, `array`, `binary-search` | — |
 | 2089 | [Find Target Indices After Sorting Array](https://leetcode.com/problems/find-target-indices-after-sorting-array/) | [C++](./Solutions/2089-find-target-indices-after-sorting-array/solution.cpp) | `Easy` | `c`, `array`, `sorting` | [Editorial](https://leetcode.com/problems/find-target-indices-after-sorting-array/solutions/sorting-and-linear-scan-on-log-n-time-on-pqeg/) |
 
 ---
