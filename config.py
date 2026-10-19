@@ -29,6 +29,10 @@ STATE_FILE = Path(os.getenv("STATE_FILE", str(BASE_DIR / "state.json"))).resolve
 WEBHOOK_HOST = os.getenv("WEBHOOK_HOST", "127.0.0.1")
 WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT", "8765"))
 
+# Git Remote Sync Settings
+GITHUB_AUTO_PUSH = os.getenv("GITHUB_AUTO_PUSH", "false").lower() in ("true", "1", "yes")
+GITHUB_REMOTE_URL = os.getenv("GITHUB_REMOTE_URL", "").strip()
+
 
 def validate_config(require_session: bool = True, require_gemini: bool = True):
     """

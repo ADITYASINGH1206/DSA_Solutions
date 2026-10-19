@@ -3,17 +3,29 @@ import subprocess
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 
-from config import REPO_PATH
+from config import REPO_PATH, GITHUB_AUTO_PUSH, GITHUB_REMOTE_URL
 from editorial_generator import SolutionOutput
 
 
 def ensure_git_repo():
     """
-    Ensure the REPO_PATH is initialized as a git repository.
+    Ensure the REPO_PATH is initialized as a git repository and configure remote if provided.
     """
     git_dir = REPO_PATH / ".git"
     if not git_dir.exists():
         subprocess.run(["git", "-C", str(REPO_PATH), "init", "-b", "main"], check=True)
+
+    if GITHUB_REMOTE_URL:
+        # Check if origin already exists
+        remotes = subprocess.run(
+            ["git", "-C", str(REPO_PATH), "remote"],
+            capture_output=True,
+            text=True,
+        ).stdout.split()
+        if "origin" not in remotes:
+            subprocess.run(["git", "-C", str(REPO_PATH), "remote", "add", "origin", GITHUB_REMOTE_URL], check=False)
+        else:
+            subprocess.run(["git", "-C", str(REPO_PATH), "remote", "set-url", "origin", GITHUB_REMOTE_URL], check=False)
 
 
 def get_problem_folder_name(frontend_id: Any, slug: str) -> str:
@@ -52,11 +64,14 @@ def commit_problem_files(
     frontend_id: Any,
     title: str,
     difficulty: str,
-    auto_push: bool = False,
+    auto_push: Optional[bool] = None,
 ) -> bool:
     """
     Stage and commit the problem folder to local Git.
     """
+    if auto_push is None:
+        auto_push = GITHUB_AUTO_PUSH
+
     try:
         ensure_git_repo()
         subprocess.run(
@@ -74,7 +89,15 @@ def commit_problem_files(
         )
 
         if auto_push and result.returncode == 0:
-            subprocess.run(["git", "-C", str(REPO_PATH), "push", "origin", "main"], check=False)
+            push_res = subprocess.run(
+                ["git", "-C", str(REPO_PATH), "push", "origin", "main"],
+                capture_output=True,
+                text=True,
+            )
+            if push_res.returncode == 0:
+                print(f"[✓] Pushed changes to GitHub remote.")
+            else:
+                print(f"[!] Warning: Git push failed: {push_res.stderr.strip() or 'Ensure origin remote is reachable'}")
 
         return result.returncode == 0
     except subprocess.CalledProcessError as e:
