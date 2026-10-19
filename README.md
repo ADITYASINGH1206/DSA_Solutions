@@ -8,7 +8,7 @@ An automated, recruiter-friendly repository of accepted LeetCode solutions in C+
 
 | Total Solved | 🟢 Easy | 🟡 Medium | 🔴 Hard | Automation Engine |
 | :---: | :---: | :---: | :---: | :---: |
-| **0** | **0** | **0** | **0** | **Gemini 2.5 Flash + LeetCode UGC** |
+| **1** | **1** | **0** | **0** | **Gemini 2.5 Flash + LeetCode UGC** |
 
 ---
 
@@ -16,7 +16,7 @@ An automated, recruiter-friendly repository of accepted LeetCode solutions in C+
 
 | # | Title | Solution | Difficulty | Topics | LeetCode Post |
 | :-: | :-- | :-: | :-: | :-- | :-: |
-| — | *No problems synchronized yet. Run `python main.py sync-recent` to start.* | — | — | — | — |
+| 2089 | [Find Target Indices After Sorting Array](https://leetcode.com/problems/find-target-indices-after-sorting-array/) | [C++](./2089-find-target-indices-after-sorting-array/solution.cpp) | `🟢 Easy` | `c`, `array`, `sorting` | — |
 
 ---
 
