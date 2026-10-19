@@ -1,0 +1,130 @@
+# [682. Baseball Game](https://leetcode.com/problems/baseball-game/)
+**Difficulty:** `Easy` | **Tags:** `array`, `stack`, `simulation`
+
+---
+
+## Problem Description
+You are keeping the scores for a baseball game with strange rules. At the beginning of the game, you start with an empty record.
+
+You are given a list of strings `operations`, where `operations[i]` is the `ith` operation you must apply to the record and is one of the following:
+
+* An integer `x`.
+  + Record a new score of `x`.
+* `'+'`.
+  + Record a new score that is the sum of the previous two scores.
+* `'D'`.
+  + Record a new score that is the double of the previous score.
+* `'C'`.
+  + Invalidate the previous score, removing it from the record.
+
+Return *the sum of all the scores on the record after applying all the operations*.
+
+The test cases are generated such that the answer and all intermediate calculations fit in a **32-bit** integer and that all operations are valid.
+
+**Example 1:**
+
+```
+Input: ops = ["5","2","C","D","+"]
+Output: 30
+Explanation:
+"5" - Add 5 to the record, record is now [5].
+"2" - Add 2 to the record, record is now [5, 2].
+"C" - Invalidate and remove the previous score, record is now [5].
+"D" - Add 2 * 5 = 10 to the record, record is now [5, 10].
+"+" - Add 5 + 10 = 15 to the record, record is now [5, 10, 15].
+The total sum is 5 + 10 + 15 = 30.
+```
+
+**Example 2:**
+
+```
+Input: ops = ["5","-2","4","C","D","9","+","+"]
+Output: 27
+Explanation:
+"5" - Add 5 to the record, record is now [5].
+"-2" - Add -2 to the record, record is now [5, -2].
+"4" - Add 4 to the record, record is now [5, -2, 4].
+"C" - Invalidate and remove the previous score, record is now [5, -2].
+"D" - Add 2 * -2 = -4 to the record, record is now [5, -2, -4].
+"9" - Add 9 to the record, record is now [5, -2, -4, 9].
+"+" - Add -4 + 9 = 5 to the record, record is now [5, -2, -4, 9, 5].
+"+" - Add 9 + 5 = 14 to the record, record is now [5, -2, -4, 9, 5, 14].
+The total sum is 5 + -2 + -4 + 9 + 5 + 14 = 27.
+```
+
+**Example 3:**
+
+```
+Input: ops = ["1","C"]
+Output: 0
+Explanation:
+"1" - Add 1 to the record, record is now [1].
+"C" - Invalidate and remove the previous score, record is now [].
+Since the record is empty, the total sum is 0.
+```
+
+**Constraints:**
+
+* `1 <= operations.length <= 1000`
+* `operations[i]` is `"C"`, `"D"`, `"+"`, or a string representing an integer in the range `[-3 * 104, 3 * 104]`.
+* For operation `"+"`, there will always be at least two previous scores on the record.
+* For operations `"C"` and `"D"`, there will always be at least one previous score on the record.
+
+---
+
+## Solution & Editorial
+# Intuition
+The problem requires maintaining a dynamic list of scores based on a sequence of rules: adding a parsed integer, duplicating the last score, summing the last two scores, or removing the last score. Since all operations depend solely on the most recent entries, a dynamic array or stack-based simulation provides an optimal and direct mechanism to track the state.
+
+# Approach
+1. Initialize a vector `scores` to maintain the valid score history and an integer `n` as the size of the `operations` vector.
+2. Iterate through each operation `operations[i]` from `i = 0` to `n - 1`:
+   - If `operations[i]` is `"+"`, compute the sum of the last two elements (`scores[scores.size()-1] + scores[scores.size()-2]`) and push the result into `scores`.
+   - If `operations[i]` is `"C"`, remove the last element using `scores.pop_back()`.
+   - If `operations[i]` is `"D"`, multiply the last element by 2 and push the result into `scores`.
+   - Otherwise, convert the string integer to an integer using `stoi(operations[i])` and push it into `scores`.
+3. After processing all operations, use `std::accumulate` to compute the sum of all elements in `scores` and return the result.
+
+### Visual Walkthrough (Example 1: ops = ["5","2","C","D","+"])
+
+| Operation | Action | `scores` Vector State |
+| :--- | :--- | :--- |
+| `"5"` | Push `5` | `[5]` |
+| `"2"` | Push `2` | `[5, 2]` |
+| `"C"` | Pop last element | `[5]` |
+| `"D"` | Push `2 * 5 = 10` | `[5, 10]` |
+| `"+"` | Push `5 + 10 = 15` | `[5, 10, 15]` |
+
+Final sum: `5 + 10 + 15 = 30`.
+
+# Complexity
+- Time complexity: $$O(N)$$ where $$N$$ is the number of operations. Each operation is processed in $$O(1)$$ average time (vector push/pop and string-to-integer conversion). The final summation via `accumulate` takes $$O(N)$$ time.
+- Space complexity: $$O(N)$$ to store the score history in the `scores` vector in the worst case where all operations are valid integer pushes.
+
+# Code
+```cpp
+class Solution {
+public:
+    int calPoints(vector<string>& operations) {
+        int ans = 0;
+        vector<int> scores;
+        int n = operations.size();
+        for(int i = 0;i < n;i++){
+            if(operations[i] == "+"){
+                int temp = scores[scores.size()-1] + scores[scores.size()-2];
+                scores.push_back(temp);
+            }else if(operations[i] == "C"){
+                scores.pop_back();
+            }else if(operations[i] == "D"){
+                int temp = 2*(scores.back());
+                scores.push_back(temp);
+            }else{
+                scores.push_back(stoi(operations[i]));
+            }
+        }
+        ans = accumulate(scores.begin(),scores.end(),0);
+
+        return ans;
+    }
+};
+```
