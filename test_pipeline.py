@@ -78,33 +78,31 @@ class TestAntiBanGuardrails:
         """
         client = LeetCodeClient("dummy_session", "dummy_csrf", "adityakumar")
 
-        # Mock questionSolutions returning a post by the same user
+        # Mock ugcArticleUserSolutionArticles returning articles
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             "data": {
-                "questionSolutions": {
-                    "solutions": [
-                        {"post": {"author": {"username": "other_coder"}}},
-                        {"post": {"author": {"username": "adityakumar"}}},
-                    ]
+                "ugcArticleUserSolutionArticles": {
+                    "totalNum": 1,
+                    "edges": [
+                        {
+                            "node": {
+                                "uuid": "test-uuid-1",
+                                "title": "Two Sum Clean Solution",
+                                "slug": "two-sum-clean-solution",
+                                "questionSlug": "two-sum",
+                                "questionTitle": "Two Sum",
+                            }
+                        }
+                    ],
                 }
             }
         }
 
         with patch.object(client.session, "post", return_value=mock_response):
             assert client.has_user_posted_solution("two-sum") is True
-
-        # When no post belongs to user
-        mock_response.json.return_value = {
-            "data": {
-                "questionSolutions": {
-                    "solutions": [{"post": {"author": {"username": "other_coder"}}}]
-                }
-            }
-        }
-        with patch.object(client.session, "post", return_value=mock_response):
-            assert client.has_user_posted_solution("two-sum") is False
+            assert client.has_user_posted_solution("unknown-problem") is False
 
 
 class TestStateManager:

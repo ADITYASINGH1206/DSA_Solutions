@@ -229,39 +229,71 @@ class LeetCodeClient:
             raise ValueError(f"No submission details returned for ID {submission_id}")
         return details
 
-    def has_user_posted_solution(self, question_slug: str) -> bool:
+    def get_all_user_solution_articles(self, force_refresh: bool = False) -> Dict[str, Dict[str, Any]]:
         """
-        Check if the user has already published a solution article on LeetCode for this problem.
+        Fetch all community solution articles authored by the user on LeetCode.
+        Returns a dict mapping question_slug -> article_dict (containing uuid, title, slug, questionSlug).
+        Cached in memory to prevent duplicate publications.
         """
+        if hasattr(self, "_user_solution_articles") and self._user_solution_articles is not None and not force_refresh:
+            return self._user_solution_articles
+
         query = """
-        query questionSolutions($questionSlug: String!, $query: String) {
-          questionSolutions(
-            filters: {
-              questionSlug: $questionSlug
-              query: $query
-              skip: 0
-              first: 10
-            }
-          ) {
-            solutions {
-              id
-              title
-              post {
-                author {
-                  username
-                }
+        query ugcArticleUserSolutionArticles($username: String!, $skip: Int!, $first: Int!) {
+          ugcArticleUserSolutionArticles(username: $username, skip: $skip, first: $first) {
+            totalNum
+            edges {
+              node {
+                uuid
+                title
+                slug
+                questionSlug
+                questionTitle
               }
             }
           }
         }
         """
-        data = self._query(query, {"questionSlug": question_slug, "query": self.username}, referer_slug=question_slug)
-        solutions = data.get("questionSolutions", {}).get("solutions", []) or []
-        for sol in solutions:
-            author = (sol.get("post") or {}).get("author", {}).get("username", "")
-            if author.lower() == self.username.lower():
-                return True
-        return False
+        articles_by_slug = {}
+        skip = 0
+        first = 50
+
+        while True:
+            try:
+                res = self._query(query, {"username": self.username, "skip": skip, "first": first})
+                data = res.get("ugcArticleUserSolutionArticles", {})
+                edges = data.get("edges", []) or []
+                total = data.get("totalNum", 0)
+
+                for e in edges:
+                    node = e.get("node")
+                    if node and node.get("questionSlug"):
+                        articles_by_slug[node["questionSlug"]] = node
+
+                skip += len(edges)
+                if not edges or skip >= total:
+                    break
+                time.sleep(0.3)
+            except Exception as e:
+                print(f"[WARNING] Failed while paginating user solution articles at skip={skip}: {e}")
+                break
+
+        self._user_solution_articles = articles_by_slug
+        return self._user_solution_articles
+
+    def has_user_posted_solution(self, question_slug: str) -> bool:
+        """
+        Check if the user has already published a solution article on LeetCode for this problem.
+        """
+        articles = self.get_all_user_solution_articles()
+        return question_slug in articles
+
+    def get_user_posted_solution(self, question_slug: str) -> Optional[Dict[str, Any]]:
+        """
+        Return the article details (uuid, slug, title) if user already posted a solution on LeetCode.
+        """
+        articles = self.get_all_user_solution_articles()
+        return articles.get(question_slug)
 
     def publish_solution(self, question_slug: str, title: str, content: str, tags: List[str]) -> Dict[str, Any]:
         """

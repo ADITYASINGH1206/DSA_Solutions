@@ -70,10 +70,16 @@ def process_submission(
 
     # 2. Check if already posted on LeetCode Community
     already_posted_on_lc = False
+    lc_article_uuid = None
+    lc_post_slug = None
+    existing_article = None
     try:
-        already_posted_on_lc = lc_client.has_user_posted_solution(question_slug)
-        if already_posted_on_lc:
-            print("[INFO] User has ALREADY published a solution article on LeetCode for this problem.")
+        existing_article = lc_client.get_user_posted_solution(question_slug)
+        if existing_article:
+            already_posted_on_lc = True
+            lc_article_uuid = existing_article.get("uuid")
+            lc_post_slug = existing_article.get("slug")
+            print(f"[INFO] Solution ALREADY published on LeetCode Community (UUID: {lc_article_uuid} | Slug: {lc_post_slug}). Duplicate post prevented.")
     except Exception as e:
         print(f"[WARNING] Problem checking LeetCode user solution: {e}")
 
@@ -90,13 +96,11 @@ def process_submission(
 
     # 4. Publish to LeetCode Community
     lc_published = False
-    lc_article_uuid = None
-    lc_post_slug = None
 
     if dry_run:
         print("[DRY-RUN] Skipping publication to LeetCode Community.")
     elif skip_lc_publish or already_posted_on_lc:
-        print("[INFO] Skipping LeetCode article publication (already exists or disabled).")
+        print("[INFO] Skipping LeetCode article publication (already published on LeetCode or disabled).")
         lc_published = already_posted_on_lc
     else:
         print("[LC] Publishing solution to LeetCode Community UGC...")
