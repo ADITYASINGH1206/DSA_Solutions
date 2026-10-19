@@ -190,9 +190,9 @@ class TestGitSyncAndTOC:
         assert get_problem_folder_name("1024", "video-stitching") == "1024-video-stitching"
 
     def test_difficulty_badges(self):
-        assert "🟢" in build_difficulty_badge("Easy")
-        assert "🟡" in build_difficulty_badge("Medium")
-        assert "🔴" in build_difficulty_badge("Hard")
+        assert "`Easy`" in build_difficulty_badge("Easy")
+        assert "`Medium`" in build_difficulty_badge("Medium")
+        assert "`Hard`" in build_difficulty_badge("Hard")
 
     def test_root_readme_generation(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -216,5 +216,5 @@ class TestGitSyncAndTOC:
                 assert "Total Solved" in content
                 assert "0001" in content
                 assert "Two Sum" in content
-                assert "🟢 Easy" in content
+                assert "`Easy`" in content
                 assert "two-sum-clean-hash-map" in content

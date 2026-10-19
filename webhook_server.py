@@ -148,9 +148,9 @@ def run_server(host: str = WEBHOOK_HOST, port: int = WEBHOOK_PORT):
     worker_thread.start()
 
     server = HTTPServer((host, port), WebhookHandler)
-    print(f"\n[🚀] Local LeetCode Sync Webhook daemon running at http://{host}:{port}")
-    print(f"[i] Ready to receive live submission triggers from Chrome Extension.")
-    print(f"[i] Press Ctrl+C to stop.\n")
+    print(f"\n[WEBHOOK] Local LeetCode Sync Webhook daemon running at http://{host}:{port}")
+    print(f"[INFO] Ready to receive live submission triggers from Chrome Extension.")
+    print(f"[INFO] Press Ctrl+C to stop.\n")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
