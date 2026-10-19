@@ -118,30 +118,30 @@ class TestStateManager:
 
         try:
             state = StateManager(state_file_path=tmp_path)
-            assert state.is_processed("two-sum") is False
+            assert state.is_processed("dummy-unindexed-problem") is False
 
             state.record_synced(
-                slug="two-sum",
-                frontend_id="1",
-                title="Two Sum",
+                slug="dummy-unindexed-problem",
+                frontend_id="9999",
+                title="Dummy Problem",
                 difficulty="Easy",
                 submission_id=123456,
-                folder_path="0001-two-sum",
+                folder_path="9999-dummy-unindexed-problem",
                 lc_published=True,
                 lc_article_uuid="uuid-1",
-                lc_post_slug="two-sum-editorial",
+                lc_post_slug="dummy-editorial",
                 tags=["c", "array"],
             )
 
             # Reload from disk
             new_state = StateManager(state_file_path=tmp_path)
-            assert new_state.is_processed("two-sum") is True
-            assert new_state.is_processed("1") is True
+            assert new_state.is_processed("dummy-unindexed-problem") is True
+            assert new_state.is_processed("9999") is True
             assert new_state.is_processed("non-existent") is False
 
-            prob = new_state.get_problem("two-sum")
+            prob = new_state.get_problem("dummy-unindexed-problem")
             assert prob is not None
-            assert prob["frontend_id"] == "1"
+            assert prob["frontend_id"] == "9999"
             assert prob["lc_published"] is True
         finally:
             if tmp_path.exists():

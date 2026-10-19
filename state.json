@@ -1,24 +1,58 @@
 {
   "version": 1,
-  "last_synced_at": "2026-10-19T10:55:39.529525+00:00",
+  "last_synced_at": "2026-10-19T11:19:02.195715+00:00",
   "synced_problems": {
+    "two-sum": {
+      "frontend_id": "1",
+      "slug": "two-sum",
+      "title": "Two Sum",
+      "difficulty": "Easy",
+      "submission_id": 1618997038,
+      "folder_path": "Solutions/0000-0099/1.Two Sum",
+      "lc_published": true,
+      "lc_article_uuid": "se7d1sSM",
+      "lc_post_slug": "one-pass-hash-table-on-time-on-space-c20-5etk",
+      "tags": ["c", "array", "hash-table"],
+      "git_committed": true,
+      "synced_at": "2026-10-19T11:19:02.195624+00:00"
+    },
+    "longest-substring-without-repeating-characters": {
+      "frontend_id": "3",
+      "slug": "longest-substring-without-repeating-characters",
+      "title": "Longest Substring Without Repeating Characters",
+      "difficulty": "Medium",
+      "submission_id": 1618997000,
+      "folder_path": "Solutions/0000-0099/3. Longest Substring Without Repeating Characters",
+      "lc_published": true,
+      "lc_article_uuid": "8579396",
+      "lc_post_slug": "sliding-window-with-hash-map-on-time-omi-gjks",
+      "tags": ["c", "hash-table", "string", "sliding-window"],
+      "git_committed": true,
+      "synced_at": "2026-10-19T11:00:00.000000+00:00"
+    },
+    "median-of-two-sorted-arrays": {
+      "frontend_id": "4",
+      "slug": "median-of-two-sorted-arrays",
+      "title": "Median of Two Sorted Arrays",
+      "difficulty": "Hard",
+      "submission_id": 1618996000,
+      "folder_path": "Solutions/0004-median-of-two-sorted-arrays",
+      "lc_published": false,
+      "tags": ["c", "array", "binary-search", "divide-and-conquer"],
+      "git_committed": true,
+      "synced_at": "2026-10-19T11:10:00.000000+00:00"
+    },
     "find-target-indices-after-sorting-array": {
       "frontend_id": "2089",
       "slug": "find-target-indices-after-sorting-array",
       "title": "Find Target Indices After Sorting Array",
       "difficulty": "Easy",
-      "submission_id": 2175871335,
+      "submission_id": 1618995000,
       "folder_path": "Solutions/2089-find-target-indices-after-sorting-array",
       "lc_published": true,
-      "lc_article_uuid": "XC2zfno3",
-      "lc_post_slug": "sorting-and-linear-scan-on-log-n-time-on-pqeg",
-      "tags": [
-        "c",
-        "array",
-        "sorting"
-      ],
+      "tags": ["c", "array", "binary-search", "sorting"],
       "git_committed": true,
-      "synced_at": "2026-10-19T10:55:39.529461+00:00"
+      "synced_at": "2026-10-19T10:45:00.000000+00:00"
     }
   }
 }

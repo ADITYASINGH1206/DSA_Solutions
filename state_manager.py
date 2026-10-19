@@ -3,7 +3,7 @@ import os
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from config import STATE_FILE
 
 
@@ -51,16 +51,67 @@ class StateManager:
                 os.remove(temp_path)
             raise
 
+    def _scan_repo_problems(self) -> Tuple[set, set]:
+        """
+        Scan the Solutions directory for any pre-existing problem solutions
+        (e.g., '1.Two Sum', '0001-two-sum', 'Solutions/0000-0099/2. Add Two Numbers').
+        Results (both numeric IDs and normalized slugs) are cached in memory for high performance.
+        """
+        if hasattr(self, "_cached_repo_ids") and self._cached_repo_ids is not None:
+            return self._cached_repo_ids, self._cached_repo_slugs
+
+        from config import SOLUTIONS_DIR
+        found_ids = set()
+        found_slugs = set()
+        if not SOLUTIONS_DIR.exists():
+            self._cached_repo_ids = found_ids
+            self._cached_repo_slugs = found_slugs
+            return found_ids, found_slugs
+
+        import re
+        for p in SOLUTIONS_DIR.glob("**/*"):
+            if p.is_dir():
+                # Ignore century range folder names like 0000-0099
+                if re.match(r"^\d{4}-\d{4}$", p.name):
+                    continue
+                m = re.match(r"^(\d+)[.\s-]+(.*)$", p.name)
+                if m:
+                    try:
+                        found_ids.add(int(m.group(1)))
+                    except ValueError:
+                        pass
+                    slug_part = re.sub(r"[^a-z0-9]+", "-", m.group(2).lower()).strip("-")
+                    if slug_part:
+                        found_slugs.add(slug_part)
+
+        self._cached_repo_ids = found_ids
+        self._cached_repo_slugs = found_slugs
+        return found_ids, found_slugs
+
     def is_processed(self, slug_or_id: str) -> bool:
         """
-        Check if a problem (by slug or frontend ID) has already been processed and synced.
+        Check if a problem has already been processed in state.json OR
+        already exists in the repository's Solutions/ directory (by ID or slug).
         """
-        key = str(slug_or_id).lower()
+        key = str(slug_or_id).lower().strip()
         if key in self.data["synced_problems"]:
             return True
         for item in self.data["synced_problems"].values():
-            if str(item.get("frontend_id")) == str(slug_or_id) or item.get("slug") == key:
+            if str(item.get("frontend_id")) == key or item.get("slug") == key:
                 return True
+
+        # Check repository filesystem for matching ID or slug
+        found_ids, found_slugs = self._scan_repo_problems()
+        if key in found_slugs:
+            return True
+
+        try:
+            numeric_id = int(slug_or_id)
+            if numeric_id in found_ids:
+                return True
+        except ValueError:
+            pass
+
         return False
 
     def get_problem(self, slug_or_id: str) -> Optional[Dict[str, Any]]:
