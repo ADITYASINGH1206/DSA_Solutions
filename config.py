@@ -22,7 +22,9 @@ LC_PUBLISH_DELAY_MIN = int(os.getenv("LC_PUBLISH_DELAY_MIN", "75"))
 LC_PUBLISH_DELAY_MAX = int(os.getenv("LC_PUBLISH_DELAY_MAX", "120"))
 
 # File Paths
-REPO_PATH = Path(os.getenv("GITHUB_REPO_DIR", str(BASE_DIR))).resolve()
+REPO_PATH = BASE_DIR
+SOLUTIONS_SUBDIR = os.getenv("GITHUB_REPO_DIR", "Solutions").strip()
+SOLUTIONS_DIR = (BASE_DIR / SOLUTIONS_SUBDIR).resolve() if SOLUTIONS_SUBDIR and SOLUTIONS_SUBDIR != "." else BASE_DIR
 STATE_FILE = Path(os.getenv("STATE_FILE", str(BASE_DIR / "state.json"))).resolve()
 
 # Webhook Server
@@ -32,6 +34,7 @@ WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT", "8765"))
 # Git Remote Sync Settings
 GITHUB_AUTO_PUSH = os.getenv("GITHUB_AUTO_PUSH", "false").lower() in ("true", "1", "yes")
 GITHUB_REMOTE_URL = os.getenv("GITHUB_REMOTE_URL", "").strip()
+GITHUB_CREATE_PR = os.getenv("GITHUB_CREATE_PR", "true").lower() in ("true", "1", "yes")
 
 
 def validate_config(require_session: bool = True, require_gemini: bool = True):

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "last_synced_at": "2026-10-19T10:55:39.529525+00:00",
+  "synced_problems": {
+    "find-target-indices-after-sorting-array": {
+      "frontend_id": "2089",
+      "slug": "find-target-indices-after-sorting-array",
+      "title": "Find Target Indices After Sorting Array",
+      "difficulty": "Easy",
+      "submission_id": 2175871335,
+      "folder_path": "Solutions/2089-find-target-indices-after-sorting-array",
+      "lc_published": true,
+      "lc_article_uuid": "XC2zfno3",
+      "lc_post_slug": "sorting-and-linear-scan-on-log-n-time-on-pqeg",
+      "tags": [
+        "c",
+        "array",
+        "sorting"
+      ],
+      "git_committed": true,
+      "synced_at": "2026-10-19T10:55:39.529461+00:00"
+    }
+  }
+}

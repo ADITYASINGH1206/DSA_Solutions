@@ -85,8 +85,8 @@ class TestAntiBanGuardrails:
             "data": {
                 "questionSolutions": {
                     "solutions": [
-                        {"author": {"username": "other_coder"}},
-                        {"author": {"username": "adityakumar"}},
+                        {"post": {"author": {"username": "other_coder"}}},
+                        {"post": {"author": {"username": "adityakumar"}}},
                     ]
                 }
             }
@@ -99,7 +99,7 @@ class TestAntiBanGuardrails:
         mock_response.json.return_value = {
             "data": {
                 "questionSolutions": {
-                    "solutions": [{"author": {"username": "other_coder"}}]
+                    "solutions": [{"post": {"author": {"username": "other_coder"}}}]
                 }
             }
         }

@@ -117,12 +117,17 @@ def process_submission(
             print(f"[!] LeetCode publication failed: {e}")
 
     # 5. Save local files in repository
-    print(f"[*] Writing solution.cpp and README.md into '{folder_name}'...")
-    save_problem_files(q, artifacts)
+    prob_dir, rel_folder_path = save_problem_files(q, artifacts)
+    print(f"[*] Wrote solution.cpp and README.md into '{rel_folder_path}'")
 
-    # 6. Git commit
-    print(f"[*] Committing to local Git: feat({frontend_id}): add {title} ({difficulty})")
-    commit_problem_files(folder_name, frontend_id, title, difficulty)
+    # 6. Git commit and PR creation
+    commit_problem_files(
+        rel_folder_path=rel_folder_path,
+        frontend_id=frontend_id,
+        title=title,
+        difficulty=difficulty,
+        slug=question_slug,
+    )
 
     # 7. Record in state
     state_mgr.record_synced(
@@ -131,7 +136,7 @@ def process_submission(
         title=title,
         difficulty=difficulty,
         submission_id=submission_id,
-        folder_path=folder_name,
+        folder_path=rel_folder_path,
         lc_published=lc_published,
         lc_article_uuid=lc_article_uuid,
         lc_post_slug=lc_post_slug,

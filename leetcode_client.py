@@ -234,27 +234,31 @@ class LeetCodeClient:
         Check if the user has already published a solution article on LeetCode for this problem.
         """
         query = """
-        query checkUserSolution($questionSlug: String!, $username: String!) {
+        query questionSolutions($questionSlug: String!, $query: String) {
           questionSolutions(
             filters: {
               questionSlug: $questionSlug
-              searchKeywords: $username
+              query: $query
+              skip: 0
+              first: 10
             }
           ) {
             solutions {
               id
               title
-              author {
-                username
+              post {
+                author {
+                  username
+                }
               }
             }
           }
         }
         """
-        data = self._query(query, {"questionSlug": question_slug, "username": self.username}, referer_slug=question_slug)
+        data = self._query(query, {"questionSlug": question_slug, "query": self.username}, referer_slug=question_slug)
         solutions = data.get("questionSolutions", {}).get("solutions", []) or []
         for sol in solutions:
-            author = sol.get("author", {}).get("username", "")
+            author = (sol.get("post") or {}).get("author", {}).get("username", "")
             if author.lower() == self.username.lower():
                 return True
         return False
@@ -262,10 +266,10 @@ class LeetCodeClient:
     def publish_solution(self, question_slug: str, title: str, content: str, tags: List[str]) -> Dict[str, Any]:
         """
         Publish the solution article to LeetCode Community via ugcArticlePublishSolution mutation.
-        Enforces tags containing 'c' and valid slugs.
+        Enforces tags containing 'c', summary, and valid schema.
         """
         mutation = """
-        mutation publishSolution($data: PublishSolutionInput!) {
+        mutation publishSolution($data: UgcArticlePublishSolutionInput!) {
           ugcArticlePublishSolution(data: $data) {
             article {
               uuid
@@ -286,6 +290,8 @@ class LeetCodeClient:
                 "title": title,
                 "content": content,
                 "tags": tag_list,
+                "summary": title[:200],
+                "thumbnail": "",
                 "isSerialized": False,
             }
         }
