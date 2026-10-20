@@ -1,0 +1,34 @@
+/**
+ * Problem: To Be Or Not To Be (2704)
+ * Link: https://leetcode.com/problems/to-be-or-not-to-be/
+ * Difficulty: Easy
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+/**
+ * @param {string} val
+ * @return {Object}
+ */
+var expect = function(val) {
+    return {
+        toBe(expected) {
+            if (val !== expected) {
+                throw new Error('Not Equal');
+            }
+            return true;
+        },
+        notToBe(expected) {
+            if (val === expected) {
+                throw new Error('Equal');
+            }
+            return true;
+        },
+    };
+};
+
+/**
+ * expect(5).toBe(5); // true
+ * expect(5).notToBe(5); // throws "Equal"
+ */
