@@ -1,0 +1,38 @@
+/**
+ * Problem: Number of Intersecting Interval Pairs II (4057)
+ * Link: https://leetcode.com/problems/number-of-intersecting-interval-pairs-ii/
+ * Difficulty: Medium
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    long long countIntersectingIntervals(vector<vector<int>>& intervals) {
+
+        int n = intervals.size() ;
+
+        vector<int> start ;
+        vector<int> end ;
+
+        for (int i = 0 ; i < n ; i++) {
+            start.push_back(intervals[i][0]) ;
+            end.push_back(intervals[i][1]) ;
+        }
+
+        sort(start.begin(), start.end()) ;
+        sort(end.begin(), end.end()) ;
+
+        long long ans = 0 ;
+        int j = 0 ;
+
+        for (int i = 0 ; i < n ; i++) {
+            while (j < n && end[j] < start[i]) {
+                j++ ;
+            }
+            ans += i - j ;
+        }
+        return ans ;
+    }
+};
