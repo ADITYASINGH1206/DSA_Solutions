@@ -1,0 +1,25 @@
+/**
+ * Problem: Truncate Sentence (1816)
+ * Link: https://leetcode.com/problems/truncate-sentence/
+ * Difficulty: Easy
+ */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    string truncateSentence(string s, int k) {
+        string ans="";
+        for(int i=0;i<s.size();i++){
+            if(s[i] == ' '){
+                k--;
+            }
+            if(k == 0){
+                break;
+            }
+            ans+= s[i];
+        }
+        return ans;
+    }
+};
